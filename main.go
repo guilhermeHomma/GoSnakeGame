@@ -3,6 +3,8 @@ package main
 import (
 	rl "github.com/gen2brain/raylib-go/raylib"
 	"SnakeGame/game"
+	"time"
+	"math/rand"
 )
 
 const (
@@ -13,14 +15,16 @@ const (
 
 var frameCount int = 0
 var squareSize int = 45
-var gameSpeed int = 7
+var gameSpeed int = 10
 
 func main() {
+	rand.Seed(time.Now().UnixNano())
 
 	rl.InitWindow(screenW, screenH, "test")
 	rl.SetTargetFPS(60)
 	
 	game.SquareSize = int32(squareSize)
+	game.GameSize = screenW
 	game.GameSpeed = gameSpeed
 	game.FrameCount = &frameCount
 
