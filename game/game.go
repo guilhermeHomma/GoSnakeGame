@@ -2,7 +2,7 @@ package game
 
 import (
 	rl "github.com/gen2brain/raylib-go/raylib"
-
+	"math/rand"
 )	
 
 type Position struct {
@@ -26,7 +26,8 @@ var GameSize int
 var GameSpeed int
 var FrameCount *int
 
-var tileQty int32 = 16
+var tileQty int32
+var apple Position
 
 var player = Player{
 	body: append([]Position{}, initialBody...),
@@ -34,12 +35,10 @@ var player = Player{
 	
 }
 
-var apple = Position{5, 6}
-
 func Start(){
 	tileQty = int32(GameSize / int(SquareSize))
 
-	setFreeTiles()
+	setApplePos()
 }
 
 func playerDirection(){
@@ -121,6 +120,7 @@ func collision() {
 
 	if head.x == apple.x && head.y == apple.y{
 		player.body = append(player.body, player.body[len(player.body) - 1] )
+		setApplePos()
 	}
 
 	for i := 1; i < len(player.body); i++ {
@@ -132,14 +132,27 @@ func collision() {
 }
 
 func setFreeTiles() {
+	freeTiles = []Position{}
 	for x := 0; x < int(tileQty); x++ {
 		for y := 0; y < int(tileQty); y++ {
-			freeTiles = append(freeTiles, Position{int32(x), int32(y)} )
+			var isFreeTile bool = true  
+			for _, element := range player.body {
+				if element.x == int32(x) && element.y == int32(y){
+					isFreeTile = false
+				}
+			}
+			if isFreeTile {
+				freeTiles = append(freeTiles, Position{int32(x), int32(y)} )
+			}
+			
 		}
 	}
 }
 
-
+func setApplePos(){
+	setFreeTiles()
+	apple = freeTiles[rand.Intn(len(freeTiles))]
+}
 
 func setInitialConfig() {
 	player = Player{
@@ -163,7 +176,7 @@ func drawApple(){
 }
 
 func drawSquare(posX int32, posY int32, sizeX int32, sizeY int32, color rl.Color){
-	lineSize := int32(1)
+	lineSize := int32(4)
 	rl.DrawRectangle(posX + lineSize, posY+ lineSize, sizeX - lineSize * 2, sizeY - lineSize *2, color)
 
 }

@@ -14,7 +14,7 @@ const (
 
 
 var frameCount int = 0
-var squareSize int = 45
+var squareSize int = 36
 var gameSpeed int = 10
 
 func main() {
@@ -27,6 +27,8 @@ func main() {
 	game.GameSize = screenW
 	game.GameSpeed = gameSpeed
 	game.FrameCount = &frameCount
+	
+	game.Start()
 
 	for !rl.WindowShouldClose() {
 		rl.BeginDrawing()
